@@ -353,13 +353,13 @@ int ffmfc_param_global(VideoState *is){
 	int audio_stream=is->audio_stream;
 	AVCodecContext *pCodecCtx = pFormatCtx->streams[video_stream]->codec;
 	AVCodecContext *pCodecCtx_au = pFormatCtx->streams[audio_stream]->codec;
-
-	URLContext *uc=(URLContext *)pFormatCtx->pb->opaque;
-	URLProtocol *up=(URLProtocol *)uc->prot;
-	//输入文件的协议----------
-	input_protocol.Format("%s",up->name);
-	dlg->m_formatprotocol.SetWindowText(input_protocol);
-
+	if(pFormatCtx->pb!=NULL){
+		URLContext *uc=(URLContext *)pFormatCtx->pb->opaque;
+		URLProtocol *up=(URLProtocol *)uc->prot;
+		//输入文件的协议----------
+		input_protocol.Format("%s",up->name);
+		dlg->m_formatprotocol.SetWindowText(input_protocol);
+	}
 	//视频解码参数，有视频的时候设置
 	if(video_stream!=-1){
 		wxh.Format("%d x %d",pCodecCtx->width,pCodecCtx->height);
