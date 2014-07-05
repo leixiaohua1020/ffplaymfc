@@ -107,15 +107,15 @@ void VideodecodeDlg::OnCustomdrawMyList ( NMHDR* pNMHDR, LRESULT* pResult )
 		int    nItem = static_cast<int>( pLVCD->nmcd.dwItemSpec );
 
 		CString strTemp = m_videodecodelist.GetItemText(nItem,1);
-		if(strcmp(strTemp,"I")==0){
+		if(strTemp.Compare(_T("I"))==0){
 			clrNewTextColor = RGB(0,0,0);		//Set the text
 			clrNewBkColor = RGB(255,0,0);		//背景设置成红色
 		}
-		else if(strcmp(strTemp,"P")==0){
+		else if(strTemp.Compare(_T("P"))==0){
 			clrNewTextColor = RGB(0,0,0);		
 			clrNewBkColor = RGB(0,255,255);		//背景设置成青色
 		}
-		else if(strcmp(strTemp,"B")==0){
+		else if(strTemp.Compare(_T("B"))==0){
 			clrNewTextColor = RGB(0,0,0);		
 			clrNewBkColor = RGB(0,255,0);		//背景设置成绿色
 		}else{

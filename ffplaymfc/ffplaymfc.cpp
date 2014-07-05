@@ -126,7 +126,7 @@ void CffplaymfcApp::LoadLaguage()
 	if((_access(conf_path, 0 )) == -1 ){  
 		//配置文件不存在，直接返回
 	}else{
-		GetPrivateProfileString("Settings","language",NULL,conf_val,300,conf_path);
+		GetPrivateProfileStringA("Settings","language",NULL,conf_val,300,conf_path);
 		if(strcmp(conf_val,"Chinese")==0){
 			SetThreadUILanguage(MAKELCID(MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED), SORT_DEFAULT));
 		}else if(strcmp(conf_val,"English")==0){

@@ -353,53 +353,75 @@ int ffmfc_param_global(VideoState *is){
 	int audio_stream=is->audio_stream;
 	AVCodecContext *pCodecCtx = pFormatCtx->streams[video_stream]->codec;
 	AVCodecContext *pCodecCtx_au = pFormatCtx->streams[audio_stream]->codec;
+
+	USES_CONVERSION;
+
 	if(pFormatCtx->pb!=NULL){
 		URLContext *uc=(URLContext *)pFormatCtx->pb->opaque;
 		URLProtocol *up=(URLProtocol *)uc->prot;
 		//输入文件的协议----------
-		input_protocol.Format("%s",up->name);
+
+
+#ifdef _UNICODE
+		input_protocol.Format(_T("%s"),A2W(up->name));
+#else
+		input_protocol.Format(_T("%s"),up->name);
+#endif
 		dlg->m_formatprotocol.SetWindowText(input_protocol);
 	}
+
+
 	//视频解码参数，有视频的时候设置
 	if(video_stream!=-1){
-		wxh.Format("%d x %d",pCodecCtx->width,pCodecCtx->height);
+		wxh.Format(_T("%d x %d"),pCodecCtx->width,pCodecCtx->height);
 		dlg->m_codecvresolution.SetWindowText(wxh);
 
-		decoder_name.Format("%s",pCodecCtx->codec->long_name);
+#ifdef _UNICODE
+		decoder_name.Format(_T("%s"),A2W(pCodecCtx->codec->long_name));
+#else
+		decoder_name.Format(_T("%s"),pCodecCtx->codec->long_name);
+#endif
+
+		
 		dlg->m_codecvname.SetWindowText(decoder_name);
 		//帧率显示还有问题
 		framerate_temp=(pFormatCtx->streams[video_stream]->r_frame_rate.num)/(pFormatCtx->streams[video_stream]->r_frame_rate.den);
-		framerate.Format("%5.2ffps",framerate_temp);
+		framerate.Format(_T("%5.2ffps"),framerate_temp);
 		dlg->m_codecvframerate.SetWindowText(framerate);
 
 		switch(pCodecCtx->pix_fmt){
 		case 0:
-			pix_fmt.Format("YUV420P");break;
+			pix_fmt.Format(_T("YUV420P"));break;
 		case 1:
-			pix_fmt.Format("YUYV422");break;
+			pix_fmt.Format(_T("YUYV422"));break;
 		case 2:
-			pix_fmt.Format("RGB24");break;
+			pix_fmt.Format(_T("RGB24"));break;
 		case 3:
-			pix_fmt.Format("BGR24");break;
+			pix_fmt.Format(_T("BGR24"));break;
 		case 12:
-			pix_fmt.Format("PIX_FMT_YUVJ420P");break;	
+			pix_fmt.Format(_T("PIX_FMT_YUVJ420P"));break;	
 		default:
-			pix_fmt.Format("UNKNOWN");
+			pix_fmt.Format(_T("UNKNOWN"));
 		}
 		dlg->m_codecvpixfmt.SetWindowText(pix_fmt);
 	}
 	//音频解码参数，有音频的时候设置
 	if(audio_stream!=-1){
-		decoder_name_au.Format("%s",pCodecCtx_au->codec->long_name);
+#ifdef _UNICODE
+		decoder_name_au.Format(_T("%s"),A2W(pCodecCtx_au->codec->long_name));
+#else
+		decoder_name_au.Format(_T("%s"),pCodecCtx_au->codec->long_name);
+#endif
+
 		dlg->m_codecaname.SetWindowText(decoder_name_au);
-		sample_rate_au.Format("%d",pCodecCtx_au->sample_rate);
+		sample_rate_au.Format(_T("%d"),pCodecCtx_au->sample_rate);
 		dlg->m_codecasamplerate.SetWindowText(sample_rate_au);
-		channels_au.Format("%d",pCodecCtx_au->channels);
+		channels_au.Format(_T("%d"),pCodecCtx_au->channels);
 		dlg->m_codecachannels.SetWindowText(channels_au);
 	}
 	//显示成以k为单位
 	bitrate_temp=((float)(pFormatCtx->bit_rate))/1000;
-	bitrate.Format("%5.2fkbps",bitrate_temp);
+	bitrate.Format(_T("%5.2fkbps"),bitrate_temp);
 	dlg->m_formatbitrate.SetWindowText(bitrate);
 	//duration是以微秒为单位
 	timelong_temp=(pFormatCtx->duration)/1000000;
@@ -409,11 +431,17 @@ int ffmfc_param_global(VideoState *is){
 	thh  = tns / 3600;
 	tmm  = (tns % 3600) / 60;
 	tss  = (tns % 60);
-	timelong.Format("%02d:%02d:%02d",thh,tmm,tss);
+	timelong.Format(_T("%02d:%02d:%02d"),thh,tmm,tss);
 	dlg->m_formatduration.SetWindowText(timelong);
 	dlg->m_duration.SetWindowText(timelong);
 	//输入文件的封装格式------
-	input_format.Format("%s",pFormatCtx->iformat->long_name);
+	
+#ifdef _UNICODE
+	input_format.Format(_T("%s"),A2W(pFormatCtx->iformat->long_name));
+#else
+	input_format.Format(_T("%s"),pFormatCtx->iformat->long_name);
+#endif
+
 	dlg->m_formatinputformat.SetWindowText(input_format);
 	//------------------------
 
@@ -438,9 +466,16 @@ int ffmfc_param_global(VideoState *is){
 	//使用循环读出
 	//(需要读取的数据，字段名称，前一条字段（循环时使用），参数)
 	while(m=av_dict_get(pFormatCtx->metadata,"",m,AV_DICT_IGNORE_SUFFIX)){
-		key.Format(m->key);
-		value.Format(m->value);
-		meta+=key+"\t:"+value+"\r\n" ;
+#ifdef _UNICODE
+		key.Format(_T("%s"),A2W(m->key));
+		value.Format(_T("%s"),A2W(m->value));
+		meta.AppendFormat(_T("%s\t:%s\r\n"),key,value);
+#else
+		key.Format(_T("%s"),m->key);
+		value.Format(_T("%s"),m->value);
+		meta.AppendFormat(_T("%s\t:%s\r\n"),key,value);
+#endif
+
 	}
 
 	//EditControl换行用\n不行，需要使用\r\n
@@ -484,6 +519,8 @@ int ffmfc_param_vframe(VideoState *is,AVFrame *pFrame,AVPacket *packet){
 	AVFormatContext *pFormatCtx = is->ic;
 	int video_stream=is->video_stream;
 	AVCodecContext *pCodecCtx = pFormatCtx->streams[video_stream]->codec;
+	
+	USES_CONVERSION;
 	//避免数据太多，超过一定量之后，就会清零--------------------------
 
 	if(vframe_index>=MAX_FRAME_NUM){
@@ -491,7 +528,7 @@ int ffmfc_param_vframe(VideoState *is,AVFrame *pFrame,AVPacket *packet){
 	}
 
 	//------------------------------
-	f_index.Format("%d",vframe_index);
+	f_index.Format(_T("%d"),vframe_index);
 	//获取当前记录条数
 	int nIndex=dlg->vddlg->m_videodecodelist.GetItemCount();
 	//“行”数据结构
@@ -501,44 +538,44 @@ int ffmfc_param_vframe(VideoState *is,AVFrame *pFrame,AVPacket *packet){
 	lvitem.iSubItem=0;
 	//注：vframe_index不可以直接赋值！
 	//务必使用f_index执行Format!再赋值！
-	lvitem.pszText=(char *)(LPCTSTR)f_index;
+	lvitem.pszText=f_index.GetBuffer();
 	//------------------------
 
 
 	switch(pFrame->key_frame){
 	case 0:
-		key_frame.Format("No");break;
+		key_frame.Format(_T("No"));break;
 	case 1:
-		key_frame.Format("Yes");break;
+		key_frame.Format(_T("Yes"));break;
 	default:
-		key_frame.Format("Unknown");
+		key_frame.Format(_T("Unknown"));
 	}
 
 	switch(pFrame->pict_type){
 	case 0:
-		pict_type.Format("Unknown");break;
+		pict_type.Format(_T("Unknown"));break;
 	case 1:
-		pict_type.Format("I");break;
+		pict_type.Format(_T("I"));break;
 	case 2:
-		pict_type.Format("P");break;
+		pict_type.Format(_T("P"));break;
 	case 3:
-		pict_type.Format("B");break;
+		pict_type.Format(_T("B"));break;
 	case 4:
-		pict_type.Format("S");break;
+		pict_type.Format(_T("S"));break;
 	case 5:
-		pict_type.Format("SI");break;
+		pict_type.Format(_T("SI"));break;
 	case 6:
-		pict_type.Format("SP");break;
+		pict_type.Format(_T("SP"));break;
 	case 7:
-		pict_type.Format("BI");break;
+		pict_type.Format(_T("BI"));break;
 	default:
-		pict_type.Format("Unknown");
+		pict_type.Format(_T("Unknown"));
 	}
 
-	reference.Format("%d",pFrame->reference);
-	pts.Format("%d",pFrame->pkt_pts);
-	dts.Format("%d",pFrame->pkt_dts);
-	codednum.Format("%d",pFrame->coded_picture_number);
+	reference.Format(_T("%d"),pFrame->reference);
+	pts.Format(_T("%d"),pFrame->pkt_pts);
+	dts.Format(_T("%d"),pFrame->pkt_dts);
+	codednum.Format(_T("%d"),pFrame->coded_picture_number);
 
 	//插入表格------------------------
 	dlg->vddlg->m_videodecodelist.InsertItem(&lvitem);
@@ -563,9 +600,9 @@ int ffmfc_param_aframe(VideoState *is,AVFrame *pFrame,AVPacket *packet){
 		dlg->SystemClear();
 	}
 	//------------------------------
-	CString number,packet_size,dts,pts;
+	CString f_index,packet_size,pts;
 	//---------------
-	number.Format("%d",aframe_index);
+	f_index.Format(_T("%d"),aframe_index);
 	//获取当前记录条数
 	int nIndex=dlg->addlg->m_audiodecodelist.GetItemCount();
 	//“行”数据结构
@@ -575,16 +612,14 @@ int ffmfc_param_aframe(VideoState *is,AVFrame *pFrame,AVPacket *packet){
 	lvitem.iSubItem=0;
 	//注：frame_index不可以直接赋值！
 	//务必使用f_index执行Format!再赋值！
-	lvitem.pszText=(char *)(LPCTSTR)number;
+	lvitem.pszText=f_index.GetBuffer();
 	//------------------------
-	packet_size.Format("%d",packet->size);
-	pts.Format("%d",packet->pts);
-	dts.Format("%d",packet->dts);
+	packet_size.Format(_T("%d"),packet->size);
+	pts.Format(_T("%d"),packet->pts);
 	//---------------
 	dlg->addlg->m_audiodecodelist.InsertItem(&lvitem);
 	dlg->addlg->m_audiodecodelist.SetItemText(nIndex,1,packet_size);
 	dlg->addlg->m_audiodecodelist.SetItemText(nIndex,2,pts);
-	dlg->addlg->m_audiodecodelist.SetItemText(nIndex,3,dts);
 	dlg->addlg->m_audiodecodelist.SendMessage(WM_VSCROLL, SB_BOTTOM, NULL);
 	aframe_index++;
 	return 0;
@@ -1310,7 +1345,7 @@ static int video_open(VideoState *is, int force_set_video_mode)
 		return 0;
 	screen = SDL_SetVideoMode(w, h, 0, flags);
 	if (!screen) {
-		AfxMessageBox("SDL: could not set video mode - exiting\n");
+		AfxMessageBox(_T("SDL: could not set video mode - exiting"));
 		do_exit(is);
 	}
 	//注意：设置视频窗口标题！
@@ -1657,7 +1692,7 @@ display:
 			thh  = tns / 3600;
 			tmm  = (tns % 3600) / 60;
 			tss  = (tns % 60);
-			currentclockstr.Format("%02d:%02d:%02d",thh,tmm,tss);
+			currentclockstr.Format(_T("%02d:%02d:%02d"),thh,tmm,tss);
 			dlg->m_currentclock.SetWindowText(currentclockstr);
 
 			fflush(stdout);
@@ -2909,7 +2944,7 @@ static int read_thread(void *arg)
 	}
 
 	if (is->video_stream < 0 && is->audio_stream < 0) {
-		AfxMessageBox("could not open codecs");
+		AfxMessageBox(_T("could not open codecs"));
 		ret = -1;
 		goto fail;
 	}
@@ -3746,7 +3781,7 @@ int ffmfc_play(LPVOID lpParam)
 	//传入文件路径
 	input_filename=(const char *)malloc(MAX_URL_LENGTH);
 
-	GetWindowText(dlg->m_inputurl,(LPSTR)input_filename,MAX_URL_LENGTH);
+	GetWindowTextA(dlg->m_inputurl,(LPSTR)input_filename,MAX_URL_LENGTH);
 	//show_banner(argc, argv, options);
 	//获取播放的首选项
 	int opt_argc=0;
@@ -3789,7 +3824,7 @@ int ffmfc_play(LPVOID lpParam)
 	//------SDL------------------------
 	//初始化
 	if (SDL_Init (flags)) {
-		AfxMessageBox("Could not initialize SDL ");
+		AfxMessageBox(_T("Could not initialize SDL "));
 		exit(1);
 	}
 
@@ -3806,7 +3841,7 @@ int ffmfc_play(LPVOID lpParam)
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 
 	if (av_lockmgr_register(lockmgr)) {
-		AfxMessageBox("Could not initialize lock manager!");
+		AfxMessageBox(_T("Could not initialize lock manager!"));
 		do_exit(NULL);
 	}
 
@@ -3815,7 +3850,7 @@ int ffmfc_play(LPVOID lpParam)
 	//解码主函数
 	is = stream_open(input_filename, file_iformat);
 	if (!is) {
-		AfxMessageBox("Failed to initialize VideoState!");
+		AfxMessageBox(_T("Failed to initialize VideoState!"));
 		do_exit(NULL);
 	}
 

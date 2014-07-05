@@ -1,18 +1,16 @@
 /* 
- * FFplay for MFC
+ *
+ * 视频之眼
+ * Video Eye
  *
  * 雷霄骅 Lei Xiaohua
  * leixiaohua1020@126.com
  * 中国传媒大学/数字电视技术
  * Communication University of China / Digital TV Technology
- *
  * http://blog.csdn.net/leixiaohua1020
- * 
- * 本工程将ffmpeg项目中的ffplay播放器（ffplay.c）移植到了VC的环境下。
- * 并且使用MFC做了一套简单的界面。
- * This software transplant ffplay to Microsoft VC++ environment. 
- * And use MFC to build a simple Graphical User Interface. 
+ *
  */
+
 
 #include "stdafx.h"
 #include "ffplaymfc.h"
@@ -326,10 +324,15 @@ void SysinfoDlg::GetSysinfo(){
 	while((*pup)!=NULL){
 		CString f_index,name,isread,iswrite,priv_data_size;
 		int nIndex=0;
-		name.Format("%s",(*pup)->name);
-
-		priv_data_size.Format("%d",(*pup)->priv_data_size);
-		f_index.Format("%d",up_index);
+		
+#ifdef _UNICODE
+		name.Format(_T("%S"),(*pup)->name);
+#else
+		//大%S在unicode工程下，后面的参数作为ansi看待
+		name.Format(_T("%s"),(*pup)->name);
+#endif
+		priv_data_size.Format(_T("%d"),(*pup)->priv_data_size);
+		f_index.Format(_T("%d"),up_index);
 		//获取当前记录条数
 		nIndex=sysinfosubup.m_sysinfoup.GetItemCount();
 		//“行”数据结构
@@ -339,7 +342,8 @@ void SysinfoDlg::GetSysinfo(){
 		lvitem.iSubItem=0;
 		//注：vframe_index不可以直接赋值！
 		//务必使用f_index执行Format!再赋值！
-		lvitem.pszText=(char *)(LPCTSTR)f_index;
+		lvitem.pszText=f_index.GetBuffer();
+		//lvitem.pszText=(LPWSTR)(LPCTSTR)f_index;
 		//------------------------
 		sysinfosubup.m_sysinfoup.InsertItem(&lvitem);
 		sysinfosubup.m_sysinfoup.SetItemText(nIndex,1,name);
@@ -361,11 +365,17 @@ void SysinfoDlg::GetSysinfo(){
 	while(if_temp!=NULL){
 		CString f_index,name,long_name,extensions,priv_data_size;
 		int nIndex=0;
-		name.Format("%s",if_temp->name);
-		long_name.Format("%s",if_temp->long_name);
-		extensions.Format("%s",if_temp->extensions);
-		priv_data_size.Format("%d",if_temp->priv_data_size);
-		f_index.Format("%d",if_index);
+#ifdef _UNICODE
+		name.Format(_T("%S"),if_temp->name);
+		long_name.Format(_T("%S"),if_temp->long_name);
+		extensions.Format(_T("%S"),if_temp->extensions);
+#else
+		name.Format(_T("%s"),if_temp->name);
+		long_name.Format(_T("%s"),if_temp->long_name);
+		extensions.Format(_T("%s"),if_temp->extensions);
+#endif
+		priv_data_size.Format(_T("%d"),if_temp->priv_data_size);
+		f_index.Format(_T("%d"),if_index);
 		//获取当前记录条数
 		nIndex=sysinfosubif.m_sysinfoif.GetItemCount();
 		//“行”数据结构
@@ -375,7 +385,7 @@ void SysinfoDlg::GetSysinfo(){
 		lvitem.iSubItem=0;
 		//注：vframe_index不可以直接赋值！
 		//务必使用f_index执行Format!再赋值！
-		lvitem.pszText=(char *)(LPCTSTR)f_index;
+		lvitem.pszText=f_index.GetBuffer();
 		//------------------------
 		sysinfosubif.m_sysinfoif.InsertItem(&lvitem);
 		sysinfosubif.m_sysinfoif.SetItemText(nIndex,1,name);
@@ -392,11 +402,15 @@ void SysinfoDlg::GetSysinfo(){
 			supported_framerates,pix_fmts,supported_samplerates,sample_fmts,channel_layouts;
 		int nIndex=0;
 
-		name.Format("%s",c_temp->name);
-		long_name.Format("%s",c_temp->long_name);
-
-		priv_data_size.Format("%d",c_temp->priv_data_size);
-		f_index.Format("%d",c_index);
+#ifdef _UNICODE
+		name.Format(_T("%S"),c_temp->name);
+		long_name.Format(_T("%S"),c_temp->long_name);
+#else
+		name.Format(_T("%s"),c_temp->name);
+		long_name.Format(_T("%s"),c_temp->long_name);
+#endif
+		priv_data_size.Format(_T("%d"),c_temp->priv_data_size);
+		f_index.Format(_T("%d"),c_index);
 		//“行”数据结构
 		LV_ITEM lvitem;
 		lvitem.mask=LVIF_TEXT;
@@ -406,19 +420,19 @@ void SysinfoDlg::GetSysinfo(){
 		case AVMEDIA_TYPE_VIDEO:
 
 			if(c_temp->supported_framerates==NULL){
-				supported_framerates.Format("Any");
+				supported_framerates.Format(_T("Any"));
 			}else{
 				float sf_cal=0.0;
 				sf_cal=(c_temp->supported_framerates->num)/(c_temp->supported_framerates->den);
-				supported_framerates.Format("%f",sf_cal);
+				supported_framerates.Format(_T("%f"),sf_cal);
 			}
 
 			if(c_temp->pix_fmts==NULL){
-				pix_fmts.Format("Unknown");
+				pix_fmts.Format(_T("Unknown"));
 			}else{
 				const enum AVPixelFormat *pf_temp=c_temp->pix_fmts;
 				while(*pf_temp!=-1){
-					pix_fmts.AppendFormat("%d;",*pf_temp);
+					pix_fmts.AppendFormat(_T("%d;"),*pf_temp);
 					pf_temp++;
 				}
 			}
@@ -427,7 +441,7 @@ void SysinfoDlg::GetSysinfo(){
 			nIndex=sysinfosubvc.m_sysinfovc.GetItemCount();
 			lvitem.iItem=nIndex;
 
-			lvitem.pszText=(char *)(LPCTSTR)f_index;
+			lvitem.pszText=f_index.GetBuffer();
 			//------------------------
 			sysinfosubvc.m_sysinfovc.InsertItem(&lvitem);
 			sysinfosubvc.m_sysinfovc.SetItemText(nIndex,1,name);
@@ -440,20 +454,20 @@ void SysinfoDlg::GetSysinfo(){
 		case AVMEDIA_TYPE_AUDIO:
 
 			if(c_temp->supported_samplerates==NULL){
-				supported_samplerates.Format("Unknown");
+				supported_samplerates.Format(_T("Unknown"));
 			}else{
 				const int *sr_temp=c_temp->supported_samplerates;
 				while(*sr_temp!=0){
-					supported_samplerates.AppendFormat("%d;",*sr_temp);
+					supported_samplerates.AppendFormat(_T("%d;"),*sr_temp);
 					sr_temp++;
 				}
 			}
 			if(c_temp->sample_fmts==NULL){
-				pix_fmts.Format("Any");
+				pix_fmts.Format(_T("Any"));
 			}else{
 				const enum AVSampleFormat *sf_temp=c_temp->sample_fmts;
 				while(*sf_temp!=-1){
-					sample_fmts.AppendFormat("%d;",*sf_temp);
+					sample_fmts.AppendFormat(_T("%d;"),*sf_temp);
 					sf_temp++;
 				}
 			}
@@ -462,7 +476,7 @@ void SysinfoDlg::GetSysinfo(){
 			nIndex=sysinfosubac.m_sysinfoac.GetItemCount();
 			lvitem.iItem=nIndex;
 
-			lvitem.pszText=(char *)(LPCTSTR)f_index;
+			lvitem.pszText=f_index.GetBuffer();
 			//------------------------
 			sysinfosubac.m_sysinfoac.InsertItem(&lvitem);
 			sysinfosubac.m_sysinfoac.SetItemText(nIndex,1,name);
@@ -476,7 +490,7 @@ void SysinfoDlg::GetSysinfo(){
 			nIndex=sysinfosuboc.m_sysinfooc.GetItemCount();
 			lvitem.iItem=nIndex;
 
-			lvitem.pszText=(char *)(LPCTSTR)f_index;
+			lvitem.pszText=f_index.GetBuffer();
 			//------------------------
 			sysinfosuboc.m_sysinfooc.InsertItem(&lvitem);
 			sysinfosuboc.m_sysinfooc.SetItemText(nIndex,1,name);

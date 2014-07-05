@@ -167,7 +167,7 @@ BOOL CffplaymfcDlg::OnInitDialog()
 	}
 
 
-	//_CrtSetBreakAlloc(683);
+	//_CrtSetBreakAlloc(4985);
 	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
@@ -258,8 +258,8 @@ void CffplaymfcDlg::ActiveBtn(){
 
 void CffplaymfcDlg::OnBnClickedStart()
 {
-	char url[1000]={0};
-	m_inputurl.GetWindowText(url,1000);
+	char url[MAX_URL_LENGTH]={0};
+	m_inputurl.GetWindowText((LPTSTR)url,1000);
 	if(strcmp(url,"")==0){
 		CString resloader;
 		resloader.LoadString(IDS_MSGBOX_NOURL);
@@ -315,29 +315,29 @@ void CffplaymfcDlg::OnBnClickedInputurlButton()
 	CString FilePathName;
 	//文件过滤字符串。够长
 	CString strfilter;
-	strfilter.Append("Common media formats|*.avi;*.wmv;*.wmp;*.wm;*.asf;*.rm;*.ram;*.rmvb;*.ra;*.mpg;*.mpeg;*.mpe;*.m1v;*.m2v;*.mpv2;");
-	strfilter.Append("*.mp2v;*.dat;*.mp4;*.m4v;*.m4p;*.vob;*.ac3;*.dts;*.mov;*.qt;*.mr;*.3gp;*.3gpp;*.3g2;*.3gp2;*.swf;*.ogg;*.wma;*.wav;");
-	strfilter.Append("*.mid;*.midi;*.mpa;*.mp2;*.mp3;*.m1a;*.m2a;*.m4a;*.aac;*.mkv;*.ogm;*.m4b;*.tp;*.ts;*.tpr;*.pva;*.pss;*.wv;*.m2ts;*.evo;");
-	strfilter.Append("*.rpm;*.realpix;*.rt;*.smi;*.smil;*.scm;*.aif;*.aiff;*.aifc;*.amr;*.amv;*.au;*.acc;*.dsa;*.dsm;*.dsv;*.dss;*.pmp;*.smk;*.flic|");
-	strfilter.Append("Windows Media Video(*.avi;*wmv;*wmp;*wm;*asf)|*.avi;*.wmv;*.wmp;*.wm;*.asf|");
-	strfilter.Append("Windows Media Audio(*.wma;*wav;*aif;*aifc;*aiff;*mid;*midi;*rmi)|*.wma;*.wav;*.aif;*.aifc;*.aiff;*.mid;*.midi;*.rmi|");
-	strfilter.Append("Real(*.rm;*ram;*rmvb;*rpm;*ra;*rt;*rp;*smi;*smil;*.scm)|*.rm;*.ram;*.rmvb;*.rpm;*.ra;*.rt;*.rp;*.smi;*.smil;*.scm|");
-	strfilter.Append("MPEG Video(*.mpg;*mpeg;*mpe;*m1v;*m2v;*mpv2;*mp2v;*dat;*mp4;*m4v;*m4p;*m4b;*ts;*tp;*tpr;*pva;*pss;*.wv;)|");
-	strfilter.Append("*.mpg;*.mpeg;*.mpe;*.m1v;*.m2v;*.mpv2;*.mp2v;*.dat;*.mp4;*.m4v;*.m4p;*.m4b;*.ts;*.tp;*.tpr;*.pva;*.pss;*.wv;|");
-	strfilter.Append("MPEG Audio(*.mpa;*mp2;*m1a;*m2a;*m4a;*aac;*.m2ts;*.evo)|*.mpa;*.mp2;*.m1a;*.m2a;*.m4a;*.aac;*.m2ts;*.evo|");
-	strfilter.Append("DVD(*.vob;*ifo;*ac3;*dts)|*.vob;*.ifo;*.ac3;*.dts|MP3(*.mp3)|*.mp3|CD Tracks(*.cda)|*.cda|");
-	strfilter.Append("Quicktime(*.mov;*qt;*mr;*3gp;*3gpp;*3g2;*3gp2)|*.mov;*.qt;*.mr;*.3gp;*.3gpp;*.3g2;*.3gp2|");
-	strfilter.Append("Flash Files(*.flv;*swf;*.f4v)|*.flv;*.swf;*.f4v|Playlist(*.smpl;*.asx;*m3u;*pls;*wvx;*wax;*wmx;*mpcpl)|*.smpl;*.asx;*.m3u;*.pls;*.wvx;*.wax;*.wmx;*.mpcpl|");
-	strfilter.Append("Others(*.ivf;*au;*snd;*ogm;*ogg;*fli;*flc;*flic;*d2v;*mkv;*pmp;*mka;*smk;*bik;*ratdvd;*roq;*drc;*dsm;*dsv;*dsa;*dss;*mpc;*divx;*vp6;*.ape;*.flac;*.tta;*.csf)");
-	strfilter.Append("|*.ivf;*.au;*.snd;*.ogm;*.ogg;*.fli;*.flc;*.flic;*.d2v;*.mkv;*.pmp;*.mka;*.smk;*.bik;*.ratdvd;*.roq;*.drc;*.dsm;*.dsv;*.dsa;*.dss;*.mpc;*.divx;*.vp6;*.ape;*.amr;*.flac;*.tta;*.csf|");
-	strfilter.Append("All Files(*.*)|*.*||");
+	strfilter.Append(_T("Common media formats|*.avi;*.wmv;*.wmp;*.wm;*.asf;*.rm;*.ram;*.rmvb;*.ra;*.mpg;*.mpeg;*.mpe;*.m1v;*.m2v;*.mpv2;"));
+	strfilter.Append(_T("*.mp2v;*.dat;*.mp4;*.m4v;*.m4p;*.vob;*.ac3;*.dts;*.mov;*.qt;*.mr;*.3gp;*.3gpp;*.3g2;*.3gp2;*.swf;*.ogg;*.wma;*.wav;"));
+	strfilter.Append(_T("*.mid;*.midi;*.mpa;*.mp2;*.mp3;*.m1a;*.m2a;*.m4a;*.aac;*.mkv;*.ogm;*.m4b;*.tp;*.ts;*.tpr;*.pva;*.pss;*.wv;*.m2ts;*.evo;"));
+	strfilter.Append(_T("*.rpm;*.realpix;*.rt;*.smi;*.smil;*.scm;*.aif;*.aiff;*.aifc;*.amr;*.amv;*.au;*.acc;*.dsa;*.dsm;*.dsv;*.dss;*.pmp;*.smk;*.flic|"));
+	strfilter.Append(_T("Windows Media Video(*.avi;*wmv;*wmp;*wm;*asf)|*.avi;*.wmv;*.wmp;*.wm;*.asf|"));
+	strfilter.Append(_T("Windows Media Audio(*.wma;*wav;*aif;*aifc;*aiff;*mid;*midi;*rmi)|*.wma;*.wav;*.aif;*.aifc;*.aiff;*.mid;*.midi;*.rmi|"));
+	strfilter.Append(_T("Real(*.rm;*ram;*rmvb;*rpm;*ra;*rt;*rp;*smi;*smil;*.scm)|*.rm;*.ram;*.rmvb;*.rpm;*.ra;*.rt;*.rp;*.smi;*.smil;*.scm|"));
+	strfilter.Append(_T("MPEG Video(*.mpg;*mpeg;*mpe;*m1v;*m2v;*mpv2;*mp2v;*dat;*mp4;*m4v;*m4p;*m4b;*ts;*tp;*tpr;*pva;*pss;*.wv;)|"));
+	strfilter.Append(_T("*.mpg;*.mpeg;*.mpe;*.m1v;*.m2v;*.mpv2;*.mp2v;*.dat;*.mp4;*.m4v;*.m4p;*.m4b;*.ts;*.tp;*.tpr;*.pva;*.pss;*.wv;|"));
+	strfilter.Append(_T("MPEG Audio(*.mpa;*mp2;*m1a;*m2a;*m4a;*aac;*.m2ts;*.evo)|*.mpa;*.mp2;*.m1a;*.m2a;*.m4a;*.aac;*.m2ts;*.evo|"));
+	strfilter.Append(_T("DVD(*.vob;*ifo;*ac3;*dts)|*.vob;*.ifo;*.ac3;*.dts|MP3(*.mp3)|*.mp3|CD Tracks(*.cda)|*.cda|"));
+	strfilter.Append(_T("Quicktime(*.mov;*qt;*mr;*3gp;*3gpp;*3g2;*3gp2)|*.mov;*.qt;*.mr;*.3gp;*.3gpp;*.3g2;*.3gp2|"));
+	strfilter.Append(_T("Flash Files(*.flv;*swf;*.f4v)|*.flv;*.swf;*.f4v|Playlist(*.smpl;*.asx;*m3u;*pls;*wvx;*wax;*wmx;*mpcpl)|*.smpl;*.asx;*.m3u;*.pls;*.wvx;*.wax;*.wmx;*.mpcpl|"));
+	strfilter.Append(_T("Others(*.ivf;*au;*snd;*ogm;*ogg;*fli;*flc;*flic;*d2v;*mkv;*pmp;*mka;*smk;*bik;*ratdvd;*roq;*drc;*dsm;*dsv;*dsa;*dss;*mpc;*divx;*vp6;*.ape;*.flac;*.tta;*.csf)"));
+	strfilter.Append(_T("|*.ivf;*.au;*.snd;*.ogm;*.ogg;*.fli;*.flc;*.flic;*.d2v;*.mkv;*.pmp;*.mka;*.smk;*.bik;*.ratdvd;*.roq;*.drc;*.dsm;*.dsv;*.dsa;*.dss;*.mpc;*.divx;*.vp6;*.ape;*.amr;*.flac;*.tta;*.csf|"));
+	strfilter.Append(_T("All Files(*.*)|*.*||"));
 
 
 	LPCTSTR lpszfilter=strfilter;
 	CFileDialog dlg(TRUE,NULL,NULL,NULL,lpszfilter);///TRUE为OPEN对话框，FALSE为SAVE AS对话框 
 	if(dlg.DoModal()==IDOK) {
 		FilePathName=dlg.GetPathName();
-		m_inputurl.SetWindowTextA(FilePathName);
+		m_inputurl.SetWindowText(FilePathName);
 	}
 }
 
@@ -381,8 +381,17 @@ void CffplaymfcDlg::OnDropFiles(HDROP hDropInfo)
 {
 	CDialogEx::OnDropFiles(hDropInfo);
 	char* pFilePathName =(char *)malloc(MAX_URL_LENGTH);
-	::DragQueryFile(hDropInfo, 0, pFilePathName,MAX_URL_LENGTH);  // 获取拖放文件的完整文件名，最关键！
-	m_inputurl.SetWindowTextA(pFilePathName);
+	::DragQueryFileA(hDropInfo, 0, pFilePathName,MAX_URL_LENGTH);  // 获取拖放文件的完整文件名，最关键！
+	CString FilePathName;
+
+#ifdef _UNICODE
+	USES_CONVERSION;
+	FilePathName.Format(_T("%s"),A2W(pFilePathName));
+#else
+	FilePathName.Format(_T("%s"),pFilePathName);
+#endif
+	m_inputurl.SetWindowText(FilePathName);
+
 	::DragFinish(hDropInfo);   // 注意这个不能少，它用于释放Windows 为处理文件拖放而分配的内存
 	free(pFilePathName);
 }
@@ -527,13 +536,13 @@ void CffplaymfcDlg::OnLangCn()
 	printf("%s",conf_path);
 	strcat(conf_path,"\\configure.ini");
 	//写入配置文件
-	WritePrivateProfileString("Settings","language","Chinese",conf_path);
+	WritePrivateProfileStringA("Settings","language","Chinese",conf_path);
 
 	//重启软件
 	char exe_path[300]={0};
 	//获得exe绝对路径
 	GetModuleFileNameA(NULL,(LPSTR)exe_path,300);
-	ShellExecute( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
+	ShellExecuteA( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
 
 	CDialogEx::OnCancel();
 }
@@ -551,13 +560,13 @@ void CffplaymfcDlg::OnLangEn()
 	printf("%s",conf_path);
 	strcat(conf_path,"\\configure.ini");
 	//写入配置文件
-	WritePrivateProfileString("Settings","language","English",conf_path);
+	WritePrivateProfileStringA("Settings","language","English",conf_path);
 
 	//重启软件
 	char exe_path[300]={0};
 	//获得exe绝对路径
 	GetModuleFileNameA(NULL,(LPSTR)exe_path,300);
-	ShellExecute( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
+	ShellExecuteA( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
 
 	CDialogEx::OnCancel();
 }
@@ -576,7 +585,7 @@ void CffplaymfcDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 void CffplaymfcDlg::OnWebsite()
 {
-	ShellExecute( NULL,"open","http://blog.csdn.net/leixiaohua1020",NULL,NULL,SW_SHOWNORMAL);
+	ShellExecuteA( NULL,"open","http://blog.csdn.net/leixiaohua1020",NULL,NULL,SW_SHOWNORMAL);
 }
 
 
