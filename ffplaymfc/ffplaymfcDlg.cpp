@@ -380,17 +380,10 @@ void CffplaymfcDlg::FreeSubWindow(){
 void CffplaymfcDlg::OnDropFiles(HDROP hDropInfo)
 {
 	CDialogEx::OnDropFiles(hDropInfo);
-	char* pFilePathName =(char *)malloc(MAX_URL_LENGTH);
-	::DragQueryFileA(hDropInfo, 0, pFilePathName,MAX_URL_LENGTH);  // 获取拖放文件的完整文件名，最关键！
-	CString FilePathName;
+	LPTSTR pFilePathName =(LPTSTR)malloc(MAX_URL_LENGTH);
+	::DragQueryFile(hDropInfo, 0, pFilePathName,MAX_URL_LENGTH);  // 获取拖放文件的完整文件名，最关键！
 
-#ifdef _UNICODE
-	USES_CONVERSION;
-	FilePathName.Format(_T("%s"),A2W(pFilePathName));
-#else
-	FilePathName.Format(_T("%s"),pFilePathName);
-#endif
-	m_inputurl.SetWindowText(FilePathName);
+	m_inputurl.SetWindowText(pFilePathName);
 
 	::DragFinish(hDropInfo);   // 注意这个不能少，它用于释放Windows 为处理文件拖放而分配的内存
 	free(pFilePathName);
@@ -544,6 +537,10 @@ void CffplaymfcDlg::OnLangCn()
 	GetModuleFileNameA(NULL,(LPSTR)exe_path,300);
 	ShellExecuteA( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
 
+	//先点一下暂停
+	OnBnClickedStop();
+	//释放子窗口
+	FreeSubWindow();
 	CDialogEx::OnCancel();
 }
 
@@ -568,6 +565,10 @@ void CffplaymfcDlg::OnLangEn()
 	GetModuleFileNameA(NULL,(LPSTR)exe_path,300);
 	ShellExecuteA( NULL,"open",exe_path,NULL,NULL,SW_SHOWNORMAL);
 
+	//先点一下暂停
+	OnBnClickedStop();
+	//释放子窗口
+	FreeSubWindow();
 	CDialogEx::OnCancel();
 }
 
