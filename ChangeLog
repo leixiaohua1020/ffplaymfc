@@ -5,3 +5,4 @@
 Changes in 1.0.2:
 - Add Unicode Character Set Support
 - Fixed "INT64_MIN INT64_MAX" Error
+- Fixed bug in Release Mode

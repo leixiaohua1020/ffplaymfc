@@ -60,9 +60,7 @@ extern "C"
 
 #include <assert.h>
 
-//补充定义
-#define INT64_MIN       (-9223372036854775807i64 - 1)
-#define INT64_MAX       9223372036854775807i64
+
 
 //最多存储的帧信息
 #define MAX_FRAME_NUM 10000

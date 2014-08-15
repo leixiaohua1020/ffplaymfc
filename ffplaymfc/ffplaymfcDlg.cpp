@@ -182,6 +182,16 @@ BOOL CffplaymfcDlg::OnInitDialog()
 
 	ResetBtn();
 
+	TCHAR* argvPath = __targv[1];
+
+
+	if(argvPath != NULL){ 
+		//设置路径
+		m_inputurl.SetWindowText(argvPath);
+		OnBnClickedStart();
+	}
+
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
