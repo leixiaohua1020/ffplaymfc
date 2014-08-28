@@ -132,6 +132,8 @@ BEGIN_MESSAGE_MAP(CffplaymfcDlg, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_COMMAND(ID_WEBSITE, &CffplaymfcDlg::OnWebsite)
 	ON_COMMAND(IDCANCEL, &CffplaymfcDlg::OnIdcancel)
+	ON_COMMAND(ID_WINDOWSTRETCH_KEEPRATIO, &CffplaymfcDlg::OnWindowstretchKeepratio)
+	ON_COMMAND(ID_WINDOWSTRETCH_RESIZE, &CffplaymfcDlg::OnWindowstretchResize)
 END_MESSAGE_MAP()
 
 UINT Thread_Play(LPVOID lpParam){
@@ -613,4 +615,16 @@ void CffplaymfcDlg::OnIdcancel()
 		FreeSubWindow();
 		CDialogEx::OnCancel();
 	}
+}
+
+
+void CffplaymfcDlg::OnWindowstretchKeepratio()
+{
+	ffmfc_stretch(0);
+}
+
+
+void CffplaymfcDlg::OnWindowstretchResize()
+{
+	ffmfc_stretch(1);
 }
