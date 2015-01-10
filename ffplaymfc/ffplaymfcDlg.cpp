@@ -38,19 +38,37 @@ public:
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	virtual BOOL OnInitDialog();
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	CEdit m_editconfig;
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
 {
+
+}
+
+BOOL CAboutDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+	CString configinfo;
+#ifdef _UNICODE
+	USES_CONVERSION;
+	configinfo.Format(_T("%s"),A2W(avformat_configuration()));
+#else
+	configinfo.Format(_T("%s"),avformat_configuration());
+#endif
+	m_editconfig.SetWindowText(configinfo);
+	return TRUE;
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT_CONFIG, m_editconfig);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
